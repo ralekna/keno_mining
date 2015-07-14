@@ -1,0 +1,23 @@
+{
+  "name": "keno_mining",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ralekna/keno_mining.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ralekna/keno_mining/issues"
+  },
+  "homepage": "https://github.com/ralekna/keno_mining",
+  "dependencies": {
+    "command-line-args": "^0.5.9",
+    "lodash": "^3.10.0"
+  }
+}

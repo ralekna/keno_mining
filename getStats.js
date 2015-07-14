@@ -4,18 +4,8 @@ var forNumber = process.argv[2];
 
 var plays = parseInt(process.argv[3] || 0);
 
-var data = '';
-
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
-
-process.stdin.on('data', function(chunk) {
-  data += chunk;
-});
-
-process.stdin.on('end', function() {
-  parseAndProcess(data, calculateTopForNumber);
-});
+var json_importer = require('./json_importer.js');
+json_importer.jsonFromPipe(calculateTopForNumber);
 
 var winTable = [
   2,
@@ -30,10 +20,6 @@ var winTable = [
   800,
   10000
 ];
-
-function parseAndProcess(data, callback) {
-  callback(JSON.parse(data));
-}
 
 function getTemplateArray(len) {
   var retVal = [];

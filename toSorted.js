@@ -1,24 +1,12 @@
 #!/usr/bin/env node
 
-var data = '';
- 
-  process.stdin.resume();
-  process.stdin.setEncoding('utf8');
- 
-  process.stdin.on('data', function(chunk) {
-    data += chunk;
-  });
- 
-  process.stdin.on('end', function() {
-    sortJSON(data)
-  });
+var json_importer = require('./json_importer.js');
+json_importer.jsonFromPipe(keyValuesToArray);
 
-function sortJSON(data) {
 
-	var obj = JSON.parse(data);
+function keyValuesToArray(data) {
 
-	var result = Object.keys(obj).sort().map(function(item) { return obj[item];});
-
+	var result = Object.keys(data).sort().map(function(item) { return data[item];});
 	console.log(JSON.stringify(result));
 
 }
