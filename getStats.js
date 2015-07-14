@@ -33,6 +33,17 @@ function compareNumbers(a, b) {
   return b.ratio - a.ratio;
 }
 
+function getAppearancesForNumber(data, number, plays) {
+  plays = plays || data.length;
+
+  return data.slice(-plays).filter(function(item) {
+    return (item.indexOf(number) >= 0);
+  });
+
+}
+
+
+
 function calculateTopForNumber(data) {
 
   if(plays == 0) {
@@ -98,3 +109,7 @@ function sortJSON(data) {
   var result = Object.keys(obj).sort().map(function(item) { return obj[item];});
   console.log(result);
 }
+
+module.exports = {
+
+};

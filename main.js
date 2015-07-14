@@ -1,8 +1,11 @@
+#!/usr/bin/env node
+
 var cliArgs = require("command-line-args");
 
 var cli = cliArgs([
   { name: "verbose", type: Boolean, alias: "v", description: "Write plenty output" },
   { name: "help", type: Boolean, description: "Print usage instructions" },
+  { name: "sort", type: String, defaultOption:"date-numbers.json", description: "Take date-sequences and convert them into array of arrays"},
   { name: "seq", type: String, defaultOption:"sorted-numbers.json", description: "Generate lucky sequences"},
   { name: "stats", type: String, defaultOption:"lucky-numbers.json", description: "Generate win statistics" },
   { name: "min", type: Number, defaultOption: 1, description: "Minimum or target number" },
@@ -23,4 +26,8 @@ if (options.help) {
   return;
 }
 
-console.log(options);
+if (options.sort) {
+  
+}
+
+// console.log(options);
