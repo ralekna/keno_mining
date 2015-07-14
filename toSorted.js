@@ -19,6 +19,6 @@ function sortJSON(data) {
 
 	var result = Object.keys(obj).sort().map(function(item) { return obj[item];});
 
-	console.log(result);
+	console.log(JSON.stringify(result));
 
 }
