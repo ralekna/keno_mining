@@ -1,33 +1,92 @@
 #!/usr/bin/env node
 
-var cliArgs = require("command-line-args");
+var cliArgs       = require("command-line-args");
+var sorter        = require("./sorter.js");
+var json_importer = require("./json_importer");
+var stats         = require("./stats");
 
-var cli = cliArgs([
-  { name: "verbose", type: Boolean, alias: "v", description: "Write plenty output" },
-  { name: "help", type: Boolean, description: "Print usage instructions" },
-  { name: "sort", type: String, defaultOption:"date-numbers.json", description: "Take date-sequences and convert them into array of arrays"},
-  { name: "seq", type: String, defaultOption:"sorted-numbers.json", description: "Generate lucky sequences"},
-  { name: "stats", type: String, defaultOption:"lucky-numbers.json", description: "Generate win statistics" },
-  { name: "min", type: Number, defaultOption: 1, description: "Minimum or target number" },
-  { name: "max", type: Number, defaultOption: NaN, description: "Maximum number. If not provided, single (min) number sequence is generated" },
-  { name: "all", type: Boolean, defaultOption: false, description: "Generate lucky numbers from 1 to 60"}
-]);
+var options = require( "yargs" )
+  .command("sort", "Take date-sequences and convert them into array of arrays. Numbers become zero-based!", function (yargs) {
+    yargs.demand(1);
+  })
+  .command("seq", "Generate lucky sequences. Input sorted sequences", function (yargs) {
+    yargs.demand(1);
+  })
+  .command("stats", "Generate win statistics. Input games data and lucky sequences", function (yargs) {
+    yargs.demand(2);
+  })
+  .default("s", 1, "Minimum or target number")
+    .alias("s", "start")
+  .default("e", 1, "Maximum number. If not provided, single (min) number sequence is generated")
+    .alias("e", "end")
+  .default("sl", 10)
+    .alias("sl", "sequence_length")
+  .default("tl", 60)
+    .alias("tl", "table_length")
+  .default("o", 0)
+    .alias("o", "offset")
+  .default("h", false)
+    .alias("h", "human")
+  .default("p", 30)
+    .alias("p", "plays")
+  .help("help")
+  .argv;
 
-/* generate a usage guide */
-var usage = cli.getUsage({
-  header: "Lucky sequence generator and tester"
-});
 
-/* parse the supplied command-line values */
-var options = cli.parse();
 
-if (options.help) {
-  console.log(usage);
+
+// sort date-values to array
+if (options.sort) {
+  var filePath = options._[0];
+  console.log( sorter.keyValuesToArray(json_importer.jsonFromFileSync(filePath))) ;
   return;
 }
 
-if (options.sort) {
-  
+// generate lucky sequences
+if (options.seq) {
+  var filePath = options._[0];
+  if (isNaN(options.max)) {
+    options.max = options.min
+  }
+
+  var sortedSequences = json_importer.jsonFromFileSync(filePath);
+
+  // result = stats.getTopSequenceForNumber( sortedSequences, options.min-1, options.plays, options.sequence_length);
+  if (options.human) {
+    console.log(
+      stats.getLuckySequencesForNumbersHuman(
+        sortedSequences,
+        options.start-1,
+        Math.max(options.end-1, options.start-1),
+        options.plays,
+        options.sequence_length,
+        options.offset,
+        options.table_length
+      )
+    );
+  } else {
+    console.log(
+      JSON.stringify(
+        stats.getRawFrequencyTables(
+          sortedSequences,
+          options.start-1,
+          Math.max(options.end-1, options.start-1),
+          options.plays,
+          options.table_length
+        )
+      )
+    );
+  }
+
+  return;
 }
 
-// console.log(options);
+// generate win statistics
+if (options.stats) {
+  var gamesDataFile = options._[0];
+  var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
+  var sequencesData = json_importer.jsonFromFileSync(options._[1]);
+  stats.getWiningStats( gamesData, sequencesData, options.plays, options.sequence_length, options.offset )
+  // console.log(  );
+  return;
+}

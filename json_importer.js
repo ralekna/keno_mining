@@ -14,3 +14,9 @@ module.exports.jsonFromPipe = function jsonFromPipe(callback, scope, params) {
   });
 
 };
+
+var fs = require('fs');
+
+module.exports.jsonFromFileSync = function(path, options) {
+  return JSON.parse(fs.readFileSync(path, options));
+};

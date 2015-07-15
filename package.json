@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ralekna/keno_mining",
   "dependencies": {
     "command-line-args": "^0.5.9",
-    "lodash": "^3.10.0"
+    "lodash": "^3.10.0",
+    "yargs": "^3.15.0"
   }
 }
