@@ -8,6 +8,7 @@ var options = require( "yargs" )
   .command("sort", "Take date-sequences and convert them into array of arrays. Numbers become zero-based!")
   .command("seq", "Generate lucky sequences. Input sorted sequences")
   .command("stats", "Generate win statistics. Input games data and lucky sequences")
+  .command("pins", "Generate table with zeros or ones mapped to according indices. Input games data")
   .default("s", 1, "Minimum or target number")
     .alias("s", "start")
   .default("e", 1, "Maximum number. If not provided, single (min) number sequence is generated")
@@ -80,5 +81,24 @@ if (options.stats) {
   var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
   var sequencesData = json_importer.jsonFromFileSync(options._[1]);
   stats.getWiningStats( gamesData, sequencesData, options.plays, options.plays_offset, options.sequence_length, options.offset );
+  return;
+}
+
+if (options.pins) {
+  var gamesDataFile = options._[0];
+  var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
+
+  var result = stats.sortedNumbersToPins(gamesData, options.plays, options.plays_offset);
+
+  if (options.human) {
+    console.log( result.map(
+      function(sequence) {
+        return sequence.join('').replace(/1/g,'\u25FC').replace(/0/g,'\u25FB');
+      }
+    ).join('\n') );
+  } else {
+    console.log( JSON.stringify( result ) );
+  }
+
   return;
 }

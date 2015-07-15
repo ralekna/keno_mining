@@ -139,11 +139,26 @@ function rawFrequenceTablesToSequences(rawFrequencyTables, sequenceLength, offse
   });
 }
 
+function sortedNumbersToPins(data, plays, playsOffset) {
+
+  var playedGames = data.slice(playsOffset, playsOffset + plays);
+
+  return playedGames.map(function(game) {
+    var table = getTemplateArray(60);
+    game.forEach(function(number) {
+      table[number] = 1;
+    });
+    return table;
+  });
+
+}
+
 module.exports = {
   // getTopSequenceForNumber             : getTopSequenceForNumber,
   // getAppearancesForNumber             : getAppearancesForNumber,
   // getFrequencyTable                   : getFrequencyTable,
   getLuckySequencesForNumbersHuman    : getLuckySequencesForNumbersHuman,
   getRawFrequencyTables               : getRawFrequencyTables,
-  getWiningStats                      : getWiningStats
+  getWiningStats                      : getWiningStats,
+  sortedNumbersToPins                 : sortedNumbersToPins
 };
