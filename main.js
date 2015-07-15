@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var cliArgs       = require("command-line-args");
 var sorter        = require("./sorter.js");
 var json_importer = require("./json_importer");
 var stats         = require("./stats");
@@ -13,12 +12,14 @@ var options = require( "yargs" )
     .alias("s", "start")
   .default("e", 1, "Maximum number. If not provided, single (min) number sequence is generated")
     .alias("e", "end")
-  .default("sl", 10)
-    .alias("sl", "sequence_length")
-  .default("tl", 60)
-    .alias("tl", "table_length")
+  .default("l", 10)
+    .alias("l", "sequence_length")
+  .default("t", 60)
+    .alias("t", "table_length")
   .default("o", 0)
     .alias("o", "offset")
+  .default("d", 0)
+    .alias("d", "plays_offset")
   .default("h", false)
     .alias("h", "human")
   .default("p", 30)
@@ -42,7 +43,6 @@ if (options.seq) {
 
   var sortedSequences = json_importer.jsonFromFileSync(filePath);
 
-  // result = stats.getTopSequenceForNumber( sortedSequences, options.min-1, options.plays, options.sequence_length);
   if (options.human) {
     console.log(
       stats.getLuckySequencesForNumbersHuman(
@@ -50,6 +50,7 @@ if (options.seq) {
         options.start-1,
         Math.max(options.end-1, options.start-1),
         options.plays,
+        options.plays_offset,
         options.sequence_length,
         options.offset,
         options.table_length
@@ -63,6 +64,7 @@ if (options.seq) {
           options.start-1,
           Math.max(options.end-1, options.start-1),
           options.plays,
+          options.plays_offset,
           options.table_length
         )
       )
@@ -77,7 +79,6 @@ if (options.stats) {
   var gamesDataFile = options._[0];
   var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
   var sequencesData = json_importer.jsonFromFileSync(options._[1]);
-  stats.getWiningStats( gamesData, sequencesData, options.plays, options.sequence_length, options.offset )
-  // console.log(  );
+  stats.getWiningStats( gamesData, sequencesData, options.plays, options.plays_offset, options.sequence_length, options.offset );
   return;
 }

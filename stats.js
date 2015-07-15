@@ -28,34 +28,15 @@ function compareNumbersAsc(a, b) {
   return a.n - b.n;
 }
 
-function getAppearancesForNumber(data, number, plays) {
-  plays = plays || data.length;
-
-  return data.slice(0, plays).filter(function(sequence) {
+function getAppearancesForNumber(data, number) {
+  return data.filter(function(sequence) {
     return (sequence.indexOf(number) >= 0);
   });
-
 }
 
-function getTopSequenceForNumber(data, number, plays, sequenceLength, offset, sort) {
+function getFrequencyTable(data, number, tableLength) {
 
-  plays          = plays          || 30;
-  sequenceLength = sequenceLength || 10;
-  offset         = offset         || 0;
-  sort           = !(sort === false);
-
-  return getFrequencyTable(data, number, plays)
-    .map(function(item, index) {
-      return {n: index, r: item};
-    })
-    .sort(compareRatiosDesc)
-    .slice(offset, sequenceLength);
-
-}
-
-function getFrequencyTable(data, number, plays, tableLength) {
-
-  var appearances = getAppearancesForNumber(data, number, plays);
+  var appearances = getAppearancesForNumber(data, number);
 
   var frequencyTable = getTemplateArray(tableLength, 0);
 
@@ -65,31 +46,30 @@ function getFrequencyTable(data, number, plays, tableLength) {
     });
   });
 
-
-
   return frequencyTable.concat();
-
 }
 
-function getRawFrequencyTables(data, start, end, plays, tableLength) {
+function getRawFrequencyTables(data, start, end, plays, playsOffset, tableLength) {
   var tables = [];
+  var playsSegment = data.slice(playsOffset, plays);
   for (var number = start; number <= end; number++ ) {
-    tables.push( getFrequencyTable(data, number, plays, tableLength) );
+    tables.push( getFrequencyTable(playsSegment, number, tableLength));
   }
 
   return {
     meta: {
-      start : start,
-      end   : end,
-      plays : plays
+      start       : start,
+      end         : end,
+      plays       : plays,
+      playsOffset : playsOffset
     },
     data: tables
   };
 }
 
-function getLuckySequencesForNumbersHuman(data, start, end, plays, sequenceLength, offset, tableLength) {
+function getLuckySequencesForNumbersHuman(data, start, end, plays, playsOffset, sequenceLength, offset, tableLength) {
 
-  var tables = getRawFrequencyTables(data, start, end, plays, tableLength).data;
+  var tables = getRawFrequencyTables(data, start, end, plays, playsOffset, tableLength).data;
 
   return tables.map(function(table) {
 
@@ -107,13 +87,13 @@ function getLuckySequencesForNumbersHuman(data, start, end, plays, sequenceLengt
   });
 }
 
-function getWiningStats(gamesData, rawFrequencyTables, plays, sequenceLength, offset) {
+function getWiningStats(gamesData, rawFrequencyTables, plays, playsOffset, sequenceLength, offset) {
   var luckySequencesNumber = rawFrequencyTables.data.length;
   var wager = plays * luckySequencesNumber;
   var winnings = -wager;
   var table = getTemplateArray(11);
 
-  var playedGames = gamesData.slice(0, plays);
+  var playedGames = gamesData.slice(playsOffset, playsOffset + plays);
 
   var sequences = rawFrequenceTablesToSequences( rawFrequencyTables.data, sequenceLength, offset );
 
@@ -137,8 +117,6 @@ function getWiningStats(gamesData, rawFrequencyTables, plays, sequenceLength, of
       // sequenceTable[lucky]++;
     });
 
-
-
   });
 
   console.log('Results: ', table);
@@ -158,7 +136,7 @@ function rawFrequenceTablesToSequences(rawFrequencyTables, sequenceLength, offse
       .map(function(item) {
         return item.n;
       });
-  })
+  });
 }
 
 module.exports = {
