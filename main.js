@@ -6,15 +6,9 @@ var json_importer = require("./json_importer");
 var stats         = require("./stats");
 
 var options = require( "yargs" )
-  .command("sort", "Take date-sequences and convert them into array of arrays. Numbers become zero-based!", function (yargs) {
-    yargs.demand(1);
-  })
-  .command("seq", "Generate lucky sequences. Input sorted sequences", function (yargs) {
-    yargs.demand(1);
-  })
-  .command("stats", "Generate win statistics. Input games data and lucky sequences", function (yargs) {
-    yargs.demand(2);
-  })
+  .command("sort", "Take date-sequences and convert them into array of arrays. Numbers become zero-based!")
+  .command("seq", "Generate lucky sequences. Input sorted sequences")
+  .command("stats", "Generate win statistics. Input games data and lucky sequences")
   .default("s", 1, "Minimum or target number")
     .alias("s", "start")
   .default("e", 1, "Maximum number. If not provided, single (min) number sequence is generated")
@@ -32,13 +26,10 @@ var options = require( "yargs" )
   .help("help")
   .argv;
 
-
-
-
 // sort date-values to array
 if (options.sort) {
-  var filePath = options._[0];
-  console.log( sorter.keyValuesToArray(json_importer.jsonFromFileSync(filePath))) ;
+  var filePath = options.sort;
+  console.log( sorter.keyValuesToArray(json_importer.jsonFromFileSync(filePath)));
   return;
 }
 
