@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var sorter        = require("./sorter.js");
-var json_importer = require("./json_importer");
+var stdin_importer = require("./stdin_importer");
 var stats         = require("./stats");
 
 var options = require( "yargs" )
@@ -31,7 +31,7 @@ var options = require( "yargs" )
 // sort date-values to array
 if (options.sort) {
   var filePath = options.sort;
-  console.log( sorter.keyValuesToArray(json_importer.jsonFromFileSync(filePath)));
+  console.log( sorter.keyValuesToArray(stdin_importer.jsonFromFileSync(filePath)));
   return;
 }
 
@@ -42,7 +42,7 @@ if (options.seq) {
     options.max = options.min
   }
 
-  var sortedSequences = json_importer.jsonFromFileSync(filePath);
+  var sortedSequences = stdin_importer.jsonFromFileSync(filePath);
 
   if (options.human) {
     console.log(
@@ -78,15 +78,23 @@ if (options.seq) {
 // generate win statistics
 if (options.stats) {
   var gamesDataFile = options._[0];
-  var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
-  var sequencesData = json_importer.jsonFromFileSync(options._[1]);
-  stats.getWiningStats( gamesData, sequencesData, options.plays, options.plays_offset, options.sequence_length, options.offset );
+  var gamesData = stdin_importer.jsonFromFileSync(gamesDataFile);
+  var sequencesData = stdin_importer.jsonFromFileSync(options._[1]);
+
+  var sequences;
+  if(sequencesData['meta']) { // if it is frequencies tables
+    sequences = stats.rawFrequenceTablesToSequences(sequencesData.data);
+  } else {
+    sequences = sequencesData;
+  }
+
+  stats.getWiningStats( gamesData, sequences, options.plays, options.plays_offset, options.sequence_length, options.offset );
   return;
 }
 
 if (options.pins) {
   var gamesDataFile = options._[0];
-  var gamesData = json_importer.jsonFromFileSync(gamesDataFile);
+  var gamesData = stdin_importer.jsonFromFileSync(gamesDataFile);
 
   var result = stats.sortedNumbersToPins(gamesData, options.plays, options.plays_offset);
 

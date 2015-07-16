@@ -1,4 +1,5 @@
-module.exports.jsonFromPipe = function jsonFromPipe(callback, scope, params) {
+
+module.exports.textFromPipe = function textFromPipe(callback, scope, params) {
 
   var data = '';
 
@@ -10,9 +11,15 @@ module.exports.jsonFromPipe = function jsonFromPipe(callback, scope, params) {
   });
 
   process.stdin.on('end', function() {
-    callback.apply(scope, [JSON.parse(data)].concat(params));
+    callback.apply(scope, [data].concat(params));
   });
 
+};
+
+module.exports.jsonFromPipe = function jsonFromPipe(callback, scope, params) {
+  textFromPipe(function (data) {
+    callback.apply(scope, [JSON.parse(data)].concat(params));
+  });
 };
 
 var fs = require('fs');

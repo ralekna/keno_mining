@@ -87,15 +87,13 @@ function getLuckySequencesForNumbersHuman(data, start, end, plays, playsOffset, 
   });
 }
 
-function getWiningStats(gamesData, rawFrequencyTables, plays, playsOffset, sequenceLength, offset) {
-  var luckySequencesNumber = rawFrequencyTables.data.length;
+function getWiningStats(gamesData, sequences, plays, playsOffset, sequenceLength, offset) {
+  var luckySequencesNumber = sequences.length;
   var wager = plays * luckySequencesNumber;
   var winnings = -wager;
   var table = getTemplateArray(11);
 
   var playedGames = gamesData.slice(playsOffset, playsOffset + plays);
-
-  var sequences = rawFrequenceTablesToSequences( rawFrequencyTables.data, sequenceLength, offset );
 
   playedGames.forEach(function(game) {
 
@@ -160,5 +158,6 @@ module.exports = {
   getLuckySequencesForNumbersHuman    : getLuckySequencesForNumbersHuman,
   getRawFrequencyTables               : getRawFrequencyTables,
   getWiningStats                      : getWiningStats,
-  sortedNumbersToPins                 : sortedNumbersToPins
+  sortedNumbersToPins                 : sortedNumbersToPins,
+  rawFrequenceTablesToSequences       : rawFrequenceTablesToSequences
 };

@@ -19,6 +19,7 @@
   "dependencies": {
     "command-line-args": "^0.5.9",
     "lodash": "^3.10.0",
+    "readline-sync": "^1.2.19",
     "yargs": "^3.15.0"
   }
 }
