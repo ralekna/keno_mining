@@ -87,7 +87,7 @@ function getLuckySequencesForNumbersHuman(data, start, end, plays, playsOffset, 
   });
 }
 
-function getWiningStats(gamesData, sequences, plays, playsOffset, sequenceLength, offset) {
+function getWiningStats(gamesData, sequences, plays, playsOffset) {
   var luckySequencesNumber = sequences.length;
   var wager = plays * luckySequencesNumber;
   var winnings = -wager;
@@ -99,7 +99,6 @@ function getWiningStats(gamesData, sequences, plays, playsOffset, sequenceLength
 
     // var sequenceTable = getTemplateArray(11);
     // var sequenceWager = plays;
-
     sequences.forEach(function(sequence) {
 
       var lucky = 0;

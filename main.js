@@ -83,12 +83,11 @@ if (options.stats) {
 
   var sequences;
   if(sequencesData['meta']) { // if it is frequencies tables
-    sequences = stats.rawFrequenceTablesToSequences(sequencesData.data);
+    sequences = stats.rawFrequenceTablesToSequences(sequencesData.data, options.sequence_length, options.offset);
   } else {
     sequences = sequencesData;
   }
-
-  stats.getWiningStats( gamesData, sequences, options.plays, options.plays_offset, options.sequence_length, options.offset );
+  stats.getWiningStats( gamesData, sequences, options.plays, options.plays_offset );
   return;
 }
 

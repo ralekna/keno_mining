@@ -13,11 +13,12 @@ function randomOrgSetsToSequences(text) {
     lines.pop();
   }
   return lines.map(function(item) {
-    var result = item.match(setPattern)[1].split(', ');
-    console.log(result);
-    return result.map(function(number) {
-      return parseInt(number);
-    });
+    return item
+      .match(setPattern)[1]
+      .split(', ')
+      .map(function(number) {
+        return parseInt(number);
+      });
   });
 }
 
