@@ -19,6 +19,8 @@ var options = require( "yargs" )
     .alias("t", "table_length")
   .default("o", 0)
     .alias("o", "offset")
+  .default("i", 1)
+    .alias("i", "iterate_with_offset")
   .default("d", 0)
     .alias("d", "plays_offset")
   .default("h", false)
@@ -44,20 +46,45 @@ if (options.seq) {
 
   var sortedSequences = stdin_importer.jsonFromFileSync(filePath);
 
+  var result;
+
   if (options.human) {
-    console.log(
-      stats.getLuckySequencesForNumbersHuman(
-        sortedSequences,
-        options.start-1,
-        Math.max(options.end-1, options.start-1),
-        options.plays,
-        options.plays_offset,
-        options.sequence_length,
-        options.offset,
-        options.table_length
-      )
-    );
+
+    result = [];
+
+    for(var i = 0; i < options._with_offset; i++) {
+      result = result.concat(
+        stats.getLuckySequencesForNumbersHuman(
+          sortedSequences,
+          options.start-1,
+          Math.max(options.end-1, options.start-1),
+          options.plays,
+          options.plays_offset,
+          options.sequence_length,
+          options.offset,
+          options.table_length
+        )
+      );
+    }
+
+    console.log( result );
   } else {
+
+    result = {
+      meta: {
+        start       : start,
+        end         : end,
+        plays       : plays,
+        playsOffset : playsOffset
+      },
+      data: tables    };
+
+    for(var i = 0; i < options._with_offset; i++) {
+      result = result.concat(
+
+      );
+    }
+
     console.log(
       JSON.stringify(
         stats.getRawFrequencyTables(
